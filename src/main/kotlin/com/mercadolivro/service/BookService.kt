@@ -53,5 +53,10 @@ class BookService(
 
     }
 
+    fun purchase(books: MutableList<BookModel>) {
+        books.map { it.status = BookStatus.VENDIDO }
+        bookRepository.saveAll(books)
+    }
+
 
 }
