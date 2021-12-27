@@ -1,6 +1,7 @@
 package com.mercadolivro.model
 
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.persistence.*
 
@@ -28,6 +29,6 @@ data class PurchaseModel(
     val price: BigDecimal,
 
     @Column(name="created_at")
-    val createdAt:LocalTime
+    val createdAt:LocalDateTime = LocalDateTime.now()
 
 )
