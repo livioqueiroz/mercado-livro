@@ -2,7 +2,7 @@ package com.mercadolivro.service
 
 import com.mercadolivro.enums.CustomerStatus
 import com.mercadolivro.enums.Errors
-import com.mercadolivro.enums.Profile
+import com.mercadolivro.enums.Role
 
 import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.model.CustomerModel
@@ -11,24 +11,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class CustomerService (
-    private val customerRepository : CustomerRepository,
+class CustomerService(
+    private val customerRepository: CustomerRepository,
     private val bookService: BookService,
-    private val bCrypt : BCryptPasswordEncoder
-        ){
+    private val bCrypt: BCryptPasswordEncoder
+) {
 
     val customers = mutableListOf<CustomerModel>()
 
-    fun getAll(name:String?): List<CustomerModel> {
-        name?.let{
+    fun getAll(name: String?): List<CustomerModel> {
+        name?.let {
             return customerRepository.findByNameContaining(name)
         }
         return customerRepository.findAll().toList()
     }
 
-    fun createCustomer(customer: CustomerModel){
+    fun createCustomer(customer: CustomerModel) {
         val customerCopy = customer.copy(
-            roles = setOf(Profile.CUSTOMER),
+            roles = setOf(Role.CUSTOMER),
             password = bCrypt.encode(customer.password)
 
         )
@@ -36,11 +36,12 @@ class CustomerService (
     }
 
     fun findById(id: Int): CustomerModel {
-        return customerRepository.findById(id).orElseThrow{ NotFoundException(Errors.ML201.message.format(id),Errors.ML201.code) }
+        return customerRepository.findById(id)
+            .orElseThrow { NotFoundException(Errors.ML201.message.format(id), Errors.ML201.code) }
     }
 
     fun update(customer: CustomerModel) {
-        if(customerRepository.existsById(customer.id!!)){
+        if (customerRepository.existsById(customer.id!!)) {
             throw Exception()
         }
         customerRepository.save(customer)
