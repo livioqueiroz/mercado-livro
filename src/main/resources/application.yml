@@ -1,4 +1,3 @@
-
 spring:
   jpa:
     hibernate:
@@ -9,3 +8,7 @@ spring:
     password: a1b2c3#A
   jackson:
     default-property-inclusion: non-null
+
+jwt:
+  secret: 01046a48-7a34-4df3-9299-099bda47cf9a
+  expiration: 999999
