@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class BookService(
-    val bookRepository: BookRepository
+    private val bookRepository: BookRepository
 ) {
     fun create(book: BookModel) {
         bookRepository.save(book)
@@ -27,7 +27,8 @@ class BookService(
     }
 
     fun findById(id: Int): BookModel {
-        return bookRepository.findById(id).orElseThrow{ NotFoundException(Errors.ML101.message.format(id),Errors.ML101.code)}
+        return bookRepository.findById(id)
+            .orElseThrow { NotFoundException(Errors.ML101.message.format(id), Errors.ML101.code) }
     }
 
     fun delete(id: Int) {
@@ -42,14 +43,14 @@ class BookService(
 
     fun deleteByCustomer(customer: CustomerModel) {
         val books = bookRepository.findByCustomer(customer)
-        for(book in books){
+        for (book in books) {
             book.status = BookStatus.DELETADO
         }
         bookRepository.saveAll(books)
     }
 
     fun findAllByIds(bookIds: Set<Int>): List<BookModel> {
-        return bookRepository.findAllById(bookIds)
+        return bookRepository.findAllById(bookIds).toList()
 
     }
 
