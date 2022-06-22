@@ -16,9 +16,6 @@ class CustomerService(
     private val bookService: BookService,
     private val bCrypt: BCryptPasswordEncoder
 ) {
-
-    val customers = mutableListOf<CustomerModel>()
-
     fun getAll(name: String?): List<CustomerModel> {
         name?.let {
             return customerRepository.findByNameContaining(name)
