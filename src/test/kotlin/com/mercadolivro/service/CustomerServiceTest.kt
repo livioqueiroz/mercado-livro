@@ -43,6 +43,20 @@ internal class CustomerServiceTest{
         verify(exactly = 0) { customerRepository.findByNameContaining(any()) }
     }
 
+    @Test
+    fun `should return customer when name was informed`(){
+        val name = UUID.randomUUID().toString()
+        val CustomerLivio = listOf(buildCustomers(name = name))
+
+        every { customerRepository.findByNameContaining(name) } returns CustomerLivio
+
+        val customers = customerService.getAll(name)
+
+        assertEquals(CustomerLivio,customers)
+        verify(exactly = 0) { customerRepository.findAll() }
+        verify(exactly = 1) { customerRepository.findByNameContaining(any()) }
+    }
+
     private fun buildCustomers(
         id: Int? = null,
         name: String = "name",
