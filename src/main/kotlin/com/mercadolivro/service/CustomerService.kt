@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 class CustomerService(
     private val customerRepository: CustomerRepository,
     private val bookService: BookService,
-    private val bCrypt: BCryptPasswordEncoder
+    private val bCrypt: BCryptPasswordEncoder,
 ) {
     fun getAll(name: String?): List<CustomerModel> {
         name?.let {
@@ -25,9 +25,7 @@ class CustomerService(
 
     fun createCustomer(customer: CustomerModel) {
         val customerCopy = customer.copy(
-            roles = setOf(Role.CUSTOMER),
-            password = bCrypt.encode(customer.password)
-
+            roles = setOf(Role.CUSTOMER), password = bCrypt.encode(customer.password)
         )
         customerRepository.save(customerCopy)
     }
@@ -38,8 +36,8 @@ class CustomerService(
     }
 
     fun update(customer: CustomerModel) {
-        if (customerRepository.existsById(customer.id!!)) {
-            throw Exception()
+        if (!customerRepository.existsById(customer.id!!)) {
+            throw NotFoundException(Errors.ML201.message.format(customer.id), Errors.ML201.code)
         }
         customerRepository.save(customer)
     }
